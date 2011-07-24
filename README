@@ -1,0 +1,25 @@
+This is a sample app to reproduce the bug for rails bug #2182
+
+It uses a local copy of rails, on the 3-1-stable branch, to create the project
+So to run this project on your local, you will either have to edit the Gemfile entry for rails to an installed gem or
+a local copy of rails on the 3-1-stable branch 
+
+Had last checked this on commit sha 787f1f30009daafa15d3f4c4ac3c50459fd8e57f. This is on branch 3-1-stable
+
+The error backtrace is on https://gist.github.com/1102147
+The rails log errors are filtered to be less verbose so i ran a asset:precompile rake task
+
+The rails issue is at https://github.com/rails/rails/issues/1732
+
+== Log
+
+Right now there are two separate components, sprockets and action_view. Also, sprockets uses Tilt while action_view does not.
+
+Ideally i think, action_view should use tilt more and the whole sprockets thing should be a rendering strategy of ActionView
+
+I am trying to solve the problem by figuring out how to render a template from say a rake task
+
+Previously, i tried to register_processor for sprockets, but that did not make sense
+
+Also, sprockets has rudimentary templating, it reads a constant.yml file and uses erb syntax aka. <%= VAR_KEY %>
+to render the config set in constants.yml
